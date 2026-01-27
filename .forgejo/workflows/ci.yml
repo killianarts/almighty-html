@@ -49,7 +49,7 @@ jobs:
         run: |
           PATH="~/.roswell/bin:$PATH"
           qlot install
-          qlot exec ros install hsx
+          qlot exec ros install almighty-html
 
       - name: Save cache
         id: save-cache
@@ -67,4 +67,4 @@ jobs:
           key: ${{ steps.restore-cache.outputs.cache-primary-key }}
 
       - name: Run tests
-        run: .qlot/bin/rove hsx.asd
+        run: .qlot/bin/rove almighty-html.asd

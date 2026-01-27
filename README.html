@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<title>README.html</title>
+<meta http-equiv="Content-Type" content="application/xhtml+xml;charset=utf-8"/>
+<link rel="stylesheet" type="text/css" media="all" href="https://cdn.jsdelivr.net/npm/github-markdown-css/github-markdown.min.css"  />
+<link rel="stylesheet" type="text/css" media="all" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release/build/styles/github.min.css"  /><meta name='viewport' content='width=device-width, initial-scale=1, shrink-to-fit=no'><style> body { box-sizing: border-box; max-width: 740px; width: 100%; margin: 40px auto; padding: 0 10px; } </style><script id='MathJax-script' async src='https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js'></script><script src='https://cdn.jsdelivr.net/gh/highlightjs/cdn-release/build/highlight.min.js'></script><script>document.addEventListener('DOMContentLoaded', () => { document.body.classList.add('markdown-body'); document.querySelectorAll('pre[lang] > code').forEach((code) => { code.classList.add(code.parentElement.lang); }); document.querySelectorAll('pre > code').forEach((code) => { hljs.highlightBlock(code); }); });</script>
+</head>
+
+<body>
+
+[WARNING] Deprecated: --highlight-style. Use --syntax-highlighting instead.
+<h1 id="almighty-html-html-s-expression">ALMIGHTY-HTML – HTML
+S-expression</h1>
+<p>
+The quadratic formula:
+</p>
+<p><math>
+<mi>x</mi><mo>=</mo><mfrac><mrow><mo>-</mo><mi>b</mi><mo>±</mo><msqrt><msup><mi>b</mi><mn>2</mn></msup><mo>-</mo><mn>4</mn><mi>a</mi><mi>c</mi></msqrt></mrow><mrow><mn>2</mn><mi>a</mi></mrow></mfrac>
+</math></p>
+<p>ALMIGHTY-HTML is a declarative, component-oriented HTML DSL for
+Common Lisp. It lets you describe HTML structures and reusable
+components directly in Lisp, safely render them to HTML strings, and
+seamlessly integrate with your web applications.</p>
+<p>→ <a href="https://github.com/skyizwhite/website">Example
+Project</a></p>
+<hr />
+<h2 id="how-it-works">How It Works</h2>
+<p>ALMIGHTY-HTML translates Lisp S-expressions into HTML by expanding
+them into calls to <code>create-element</code>.</p>
+<p>Each tag or component inside an <code>(almighty-html ...)</code> form
+becomes:</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode lisp"><code class="sourceCode commonlisp"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>(create-element <span class="kw">type</span> props children)</span></code></pre></div>
+<p>For example:</p>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode lisp"><code class="sourceCode commonlisp"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>(almighty-html</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  (article :class <span class="st">&quot;container&quot;</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    (h1 <span class="st">&quot;Title&quot;</span>)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    (p <span class="st">&quot;Paragraph&quot;</span>)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    (~share-button :service :x)))</span></code></pre></div>
+<p>Expands into:</p>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode lisp"><code class="sourceCode commonlisp"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>(create-element :article</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>                (<span class="kw">list</span> :class <span class="st">&quot;container&quot;</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>                (<span class="kw">list</span> (create-element :h1 <span class="kw">nil</span> (<span class="kw">list</span> <span class="st">&quot;Title&quot;</span>))</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>                      (create-element :p <span class="kw">nil</span> (<span class="kw">list</span> <span class="st">&quot;Paragraph&quot;</span>))</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>                      (create-element <span class="op">#&#39;</span>~share-button</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>                                      (<span class="kw">list</span> :service :x)</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>                                      <span class="kw">nil</span>)))</span></code></pre></div>
+<hr />
+<h2 id="quick-example">Quick Example</h2>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode lisp"><code class="sourceCode commonlisp"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>(almighty-html</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  (div :id <span class="st">&quot;main&quot;</span> :class <span class="st">&quot;container&quot;</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    (h1 <span class="st">&quot;Hello, ALMIGHTY-HTML!&quot;</span>)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    (p <span class="st">&quot;This is a simple paragraph.&quot;</span>)))</span></code></pre></div>
+<p>↓</p>
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode html"><code class="sourceCode html"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">div</span><span class="ot"> id</span><span class="op">=</span><span class="st">&quot;main&quot;</span><span class="ot"> class</span><span class="op">=</span><span class="st">&quot;container&quot;</span><span class="dt">&gt;</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&lt;</span><span class="kw">h1</span><span class="dt">&gt;</span>Hello, ALMIGHTY-HTML!<span class="dt">&lt;/</span><span class="kw">h1</span><span class="dt">&gt;</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&lt;</span><span class="kw">p</span><span class="dt">&gt;</span>This is a simple paragraph.<span class="dt">&lt;/</span><span class="kw">p</span><span class="dt">&gt;</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;/</span><span class="kw">div</span><span class="dt">&gt;</span></span></code></pre></div>
+<hr />
+<h2 id="basic-usage">Basic Usage</h2>
+<h3 id="step-1-create-a-component">Step 1: Create a Component</h3>
+<p>Components are defined using <code>define-component</code>. They are simple
+Lisp functions that return ALMIGHTY-HTML elements.</p>
+<p>Component names must start with <code>~</code> and props should be
+declared with <code>&amp;key</code> and/or <code>&amp;rest</code>. The
+special <code>children</code> key automatically receives any nested
+elements.</p>
+<div class="sourceCode" id="cb6"><pre
+class="sourceCode lisp"><code class="sourceCode commonlisp"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>(define-component ~button (&amp;key href <span class="kw">class</span> children)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  (almighty-html</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    (a :href href :class (clsx <span class="st">&quot;btn&quot;</span> <span class="kw">class</span>)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>      children)))</span></code></pre></div>
+<h3 id="step-2-combine-components">Step 2: Combine Components</h3>
+<p>ALMIGHTY-HTML allows composition of components just like JSX.</p>
+<div class="sourceCode" id="cb7"><pre
+class="sourceCode lisp"><code class="sourceCode commonlisp"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>(define-component ~card (&amp;key title children)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  (almighty-html</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    (div :class <span class="st">&quot;card&quot;</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>      (h2 title)</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>      (div :class <span class="st">&quot;content&quot;</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>        children))))</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>(<span class="kw">defparameter</span><span class="fu"> *view*</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>  (almighty-html</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>    (div :class <span class="st">&quot;container&quot;</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>      (~card :title <span class="st">&quot;Hello&quot;</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>        (~button :href <span class="st">&quot;/start&quot;</span> :class <span class="st">&quot;primary&quot;</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>          <span class="st">&quot;Get Started&quot;</span>))</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>      (~card :title <span class="st">&quot;Docs&quot;</span></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>        (p <span class="st">&quot;Read the documentation to learn more.&quot;</span>)))))</span></code></pre></div>
+<h3 id="step-3-render-to-html">Step 3: Render to HTML</h3>
+<p>Use <code>render-to-string</code> to produce a full HTML string. Pass
+<code>:pretty t</code> for indented, human-readable output.</p>
+<div class="sourceCode" id="cb8"><pre
+class="sourceCode lisp"><code class="sourceCode commonlisp"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>(render-to-string *view* :pretty <span class="kw">t</span>)</span></code></pre></div>
+<p>Output:</p>
+<div class="sourceCode" id="cb9"><pre
+class="sourceCode html"><code class="sourceCode html"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">div</span><span class="ot"> class</span><span class="op">=</span><span class="st">&quot;container&quot;</span><span class="dt">&gt;</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&lt;</span><span class="kw">div</span><span class="ot"> class</span><span class="op">=</span><span class="st">&quot;card&quot;</span><span class="dt">&gt;</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&lt;</span><span class="kw">h2</span><span class="dt">&gt;</span>Hello<span class="dt">&lt;/</span><span class="kw">h2</span><span class="dt">&gt;</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&lt;</span><span class="kw">div</span><span class="ot"> class</span><span class="op">=</span><span class="st">&quot;content&quot;</span><span class="dt">&gt;</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&lt;</span><span class="kw">a</span><span class="ot"> href</span><span class="op">=</span><span class="st">&quot;/start&quot;</span><span class="ot"> class</span><span class="op">=</span><span class="st">&quot;btn primary&quot;</span><span class="dt">&gt;</span>Get Started<span class="dt">&lt;/</span><span class="kw">a</span><span class="dt">&gt;</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&lt;/</span><span class="kw">div</span><span class="dt">&gt;</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&lt;/</span><span class="kw">div</span><span class="dt">&gt;</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&lt;</span><span class="kw">div</span><span class="ot"> class</span><span class="op">=</span><span class="st">&quot;card&quot;</span><span class="dt">&gt;</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&lt;</span><span class="kw">h2</span><span class="dt">&gt;</span>Docs<span class="dt">&lt;/</span><span class="kw">h2</span><span class="dt">&gt;</span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&lt;</span><span class="kw">div</span><span class="ot"> class</span><span class="op">=</span><span class="st">&quot;content&quot;</span><span class="dt">&gt;</span></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&lt;</span><span class="kw">p</span><span class="dt">&gt;</span>Read the documentation to learn more.<span class="dt">&lt;/</span><span class="kw">p</span><span class="dt">&gt;</span></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&lt;/</span><span class="kw">div</span><span class="dt">&gt;</span></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&lt;/</span><span class="kw">div</span><span class="dt">&gt;</span></span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;/</span><span class="kw">div</span><span class="dt">&gt;</span></span></code></pre></div>
+<hr />
+<h2 id="fragments">Fragments</h2>
+<h3 id="fragment"><code>&lt;&gt;</code> — Fragment</h3>
+<p>Combine multiple elements without creating an extra parent tag.</p>
+<div class="sourceCode" id="cb10"><pre
+class="sourceCode lisp"><code class="sourceCode commonlisp"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>(almighty-html</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  (&lt;&gt;</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    (li <span class="st">&quot;One&quot;</span>)</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    (li <span class="st">&quot;Two&quot;</span>)))</span></code></pre></div>
+<p>↓</p>
+<div class="sourceCode" id="cb11"><pre
+class="sourceCode html"><code class="sourceCode html"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">li</span><span class="dt">&gt;</span>One<span class="dt">&lt;/</span><span class="kw">li</span><span class="dt">&gt;</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">li</span><span class="dt">&gt;</span>Two<span class="dt">&lt;/</span><span class="kw">li</span><span class="dt">&gt;</span></span></code></pre></div>
+<p>Fragments are useful when returning multiple sibling elements from a
+component.</p>
+<h3 id="raw-raw-fragment"><code>raw!</code> — Raw Fragment</h3>
+<p>ALMIGHTY-HTML automatically escapes unsafe characters in text and
+attribute values to prevent injection attacks. If you need to insert
+raw, unescaped HTML, you can do so — but use it only with trusted
+content, as it disables automatic escaping and may expose security
+risks.</p>
+<div class="sourceCode" id="cb12"><pre
+class="sourceCode lisp"><code class="sourceCode commonlisp"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>(almighty-html</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  (script (raw! <span class="st">&quot;alert(&#39;unsafe if user-generated!&#39;)&quot;</span>)))</span></code></pre></div>
+<hr />
+<h2 id="expressions-and-logic">Expressions and Logic</h2>
+<p>You can embed any Lisp expression directly inside an ALMIGHTY-HTML
+form. Since ALMIGHTY-HTML is just Lisp syntax, you can use if, when,
+loop, or any other macro to build dynamic content.</p>
+<h3 id="conditional-rendering">Conditional Rendering</h3>
+<div class="sourceCode" id="cb13"><pre
+class="sourceCode lisp"><code class="sourceCode commonlisp"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>(almighty-html</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  (div</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    (<span class="kw">if</span> (<span class="op">&gt;</span> (<span class="kw">random</span> <span class="dv">10</span>) <span class="dv">5</span>)</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>        (almighty-html (p <span class="st">&quot;High!&quot;</span>))</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>        (almighty-html (p <span class="st">&quot;Low!&quot;</span>)))))</span></code></pre></div>
+<h3 id="loop-rendering">Loop Rendering</h3>
+<div class="sourceCode" id="cb14"><pre
+class="sourceCode lisp"><code class="sourceCode commonlisp"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>(almighty-html</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  (ul</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    (<span class="kw">loop</span> :for item :in items :collect</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>      (almighty-html (li item)))))</span></code></pre></div>
+<h3 id="dynamic-props">Dynamic Props</h3>
+<p>ALMIGHTY-HTML supports both inline plist props and dynamic plist
+props.</p>
+<div class="sourceCode" id="cb15"><pre
+class="sourceCode lisp"><code class="sourceCode commonlisp"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">let</span> ((props &#39;(:class <span class="st">&quot;btn&quot;</span> :href <span class="st">&quot;/&quot;</span>)))</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  (almighty-html (a props <span class="st">&quot;Dynamic Link&quot;</span>)))</span></code></pre></div>
+<hr />
+<h2 id="utilities">Utilities</h2>
+<h3
+id="register-web-components"><code>register-web-components</code></h3>
+<p>Makes Web Components usable in ALMIGHTY-HTML.</p>
+<div class="sourceCode" id="cb16"><pre
+class="sourceCode lisp"><code class="sourceCode commonlisp"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>(register-web-components</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a> custom1 custom2)</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>(almighty-html</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>  (custom1 :prop <span class="st">&quot;val&quot;</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>    (custom2)))</span></code></pre></div>
+<p>↓</p>
+<div class="sourceCode" id="cb17"><pre
+class="sourceCode html"><code class="sourceCode html"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">custom1</span><span class="ot"> prop</span><span class="op">=</span><span class="st">&quot;val&quot;</span><span class="dt">&gt;</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&lt;</span><span class="kw">custom2</span><span class="dt">&gt;&lt;/</span><span class="kw">custom2</span><span class="dt">&gt;</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;/</span><span class="kw">custom1</span><span class="dt">&gt;</span></span></code></pre></div>
+<h3 id="clear-web-components"><code>clear-web-components</code></h3>
+<p>Clears all registered Web Components.</p>
+<h3 id="clsx"><code>clsx</code></h3>
+<p>Builds class strings conditionally. Removes <code>nil</code> and
+joins the remaining strings with spaces.</p>
+<div class="sourceCode" id="cb18"><pre
+class="sourceCode lisp"><code class="sourceCode commonlisp"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>(clsx <span class="st">&quot;btn&quot;</span> <span class="kw">nil</span> <span class="st">&quot;primary&quot;</span>)</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="co">;; =&gt; &quot;btn primary&quot;</span></span></code></pre></div>
+<hr />
+<h2 id="license">License</h2>
+<p>MIT License</p>
+<p>© 2024 Akira Tempaku</p>
+<p>© 2018 Bo Yao (original <a
+href="https://github.com/ailisp/flute">flute</a> project)</p>
+
+</body>
+</html>

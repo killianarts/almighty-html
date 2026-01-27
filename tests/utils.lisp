@@ -1,8 +1,8 @@
-(defpackage #:hsx-test/utils
+(defpackage #:almighty-html-test/utils
   (:use #:cl
         #:rove
-        #:hsx/utils))
-(in-package #:hsx-test/utils)
+        #:almighty-html/utils))
+(in-package #:almighty-html-test/utils)
 
 (deftest text-util-test
   (testing "escape-html-attribute"

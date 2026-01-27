@@ -1,15 +1,15 @@
-(defpackage :hsx
-  (:nicknames #:hsx/main)
+(defpackage #:almighty-html
+  (:nicknames #:almighty-html/main)
   (:use #:cl
-        #:hsx/element
-        #:hsx/dsl
-        #:hsx/utils)
-  (:import-from #:hsx/builtin)
-  (:import-from #:hsx/web-components)
-  (:export #:hsx
-           #:defcomp
+        #:almighty-html/element
+        #:almighty-html/dsl
+        #:almighty-html/utils)
+  (:import-from #:almighty-html/builtin)
+  (:import-from #:almighty-html/web-components)
+  (:export #:almighty-html
+           #:define-component
            #:register-web-components
            #:clear-web-components
            #:render-to-string
            #:clsx))
-(in-package :hsx)
+(in-package :almighty-html)

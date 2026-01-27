@@ -1,4 +1,4 @@
-(defpackage #:hsx/element
+(defpackage #:almighty-html/element
   (:use #:cl)
   (:import-from #:alexandria
                 #:flatten)
@@ -6,7 +6,7 @@
                 #:collapse-whitespaces)
   (:import-from #:cl-minify-css
                 #:minify-css)
-  (:import-from #:hsx/utils
+  (:import-from #:almighty-html/utils
                 #:escape-html-text-content
                 #:escape-html-attribute)
   (:export #:element
@@ -23,7 +23,7 @@
            #:element-children
            #:expand-component
            #:render-to-string))
-(in-package #:hsx/element)
+(in-package #:almighty-html/element)
 
 ;;; tag group definitions
 
@@ -78,7 +78,7 @@
 ;;;; methods
 
 (defgeneric render-to-string (element &key pretty)
-  (:documentation "Render an HSX element to an HTML string."))
+  (:documentation "Render an ALMIGHTY-HTML element to an HTML string."))
 
 (defmethod render-to-string ((element element) &key pretty)
   (with-output-to-string (stream)

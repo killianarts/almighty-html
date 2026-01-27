@@ -1,6 +1,6 @@
-# HSX – HTML S-expression
+# ALMIGHTY-HTML – HTML S-expression
 
-HSX is a declarative, component-oriented HTML DSL for Common Lisp.
+ALMIGHTY-HTML is a declarative, component-oriented HTML DSL for Common Lisp.
 It lets you describe HTML structures and reusable components directly in Lisp, safely render them to HTML strings, and seamlessly integrate with your web applications.
 
 → [Example Project](https://github.com/skyizwhite/website)
@@ -9,9 +9,9 @@ It lets you describe HTML structures and reusable components directly in Lisp, s
 
 ## How It Works
 
-HSX translates Lisp S-expressions into HTML by expanding them into calls to `create-element`.
+ALMIGHTY-HTML translates Lisp S-expressions into HTML by expanding them into calls to `create-element`.
 
-Each tag or component inside an `(hsx ...)` form becomes:
+Each tag or component inside an `(almighty-html ...)` form becomes:
 
 ```lisp
 (create-element type props children)
@@ -20,7 +20,7 @@ Each tag or component inside an `(hsx ...)` form becomes:
 For example:
 
 ```lisp
-(hsx
+(almighty-html
   (article :class "container"
     (h1 "Title")
     (p "Paragraph")
@@ -44,9 +44,9 @@ Expands into:
 ## Quick Example
 
 ```lisp
-(hsx
+(almighty-html
   (div :id "main" :class "container"
-    (h1 "Hello, HSX!")
+    (h1 "Hello, ALMIGHTY-HTML!")
     (p "This is a simple paragraph.")))
 ```
 
@@ -54,7 +54,7 @@ Expands into:
 
 ```html
 <div id="main" class="container">
-  <h1>Hello, HSX!</h1>
+  <h1>Hello, ALMIGHTY-HTML!</h1>
   <p>This is a simple paragraph.</p>
 </div>
 ```
@@ -65,33 +65,33 @@ Expands into:
 
 ### Step 1: Create a Component
 
-Components are defined using `defcomp`.
-They are simple Lisp functions that return HSX elements.
+Components are defined using `define-component`.
+They are simple Lisp functions that return ALMIGHTY-HTML elements.
 
 Component names must start with `~` and props should be declared with `&key` and/or `&rest`.
 The special `children` key automatically receives any nested elements.
 
 ```lisp
-(defcomp ~button (&key href class children)
-  (hsx
+(define-component ~button (&key href class children)
+  (almighty-html
     (a :href href :class (clsx "btn" class)
       children)))
 ```
 
 ### Step 2: Combine Components
 
-HSX allows composition of components just like JSX.
+ALMIGHTY-HTML allows composition of components just like JSX.
 
 ```lisp
-(defcomp ~card (&key title children)
-  (hsx
+(define-component ~card (&key title children)
+  (almighty-html
     (div :class "card"
       (h2 title)
       (div :class "content"
         children))))
 
 (defparameter *view*
-  (hsx
+  (almighty-html
     (div :class "container"
       (~card :title "Hello"
         (~button :href "/start" :class "primary"
@@ -137,7 +137,7 @@ Output:
 Combine multiple elements without creating an extra parent tag.
 
 ```lisp
-(hsx
+(almighty-html
   (<>
     (li "One")
     (li "Two")))
@@ -154,11 +154,11 @@ Fragments are useful when returning multiple sibling elements from a component.
 
 ### `raw!` — Raw Fragment
 
-HSX automatically escapes unsafe characters in text and attribute values to prevent injection attacks.
+ALMIGHTY-HTML automatically escapes unsafe characters in text and attribute values to prevent injection attacks.
 If you need to insert raw, unescaped HTML, you can do so — but use it only with trusted content, as it disables automatic escaping and may expose security risks.
 
 ```lisp
-(hsx
+(almighty-html
   (script (raw! "alert('unsafe if user-generated!')")))
 ```
 
@@ -166,35 +166,35 @@ If you need to insert raw, unescaped HTML, you can do so — but use it only wit
 
 ## Expressions and Logic
 
-You can embed any Lisp expression directly inside an HSX form.
-Since HSX is just Lisp syntax, you can use if, when, loop, or any other macro to build dynamic content.
+You can embed any Lisp expression directly inside an ALMIGHTY-HTML form.
+Since ALMIGHTY-HTML is just Lisp syntax, you can use if, when, loop, or any other macro to build dynamic content.
 
 ### Conditional Rendering
 
 ```lisp
-(hsx
+(almighty-html
   (div
     (if (> (random 10) 5)
-        (hsx (p "High!"))
-        (hsx (p "Low!")))))
+        (almighty-html (p "High!"))
+        (almighty-html (p "Low!")))))
 ```
 
 ### Loop Rendering
 
 ```lisp
-(hsx
+(almighty-html
   (ul
     (loop :for item :in items :collect
-      (hsx (li item)))))
+      (almighty-html (li item)))))
 ```
 
 ### Dynamic Props
 
-HSX supports both inline plist props and dynamic plist props.
+ALMIGHTY-HTML supports both inline plist props and dynamic plist props.
 
 ```lisp
 (let ((props '(:class "btn" :href "/")))
-  (hsx (a props "Dynamic Link")))
+  (almighty-html (a props "Dynamic Link")))
 ```
 
 ---
@@ -203,13 +203,13 @@ HSX supports both inline plist props and dynamic plist props.
 
 ### `register-web-components`
 
-Makes Web Components usable in HSX.
+Makes Web Components usable in ALMIGHTY-HTML.
 
 ```lisp
 (register-web-components
  custom1 custom2)
 
-(hsx
+(almighty-html
   (custom1 :prop "val"
     (custom2)))
 ```

@@ -1,12 +1,12 @@
-(defpackage #:hsx-test/element
+(defpackage #:almighty-html-test/element
   (:use #:cl
         #:rove
-        #:hsx/element)
+        #:almighty-html/element)
   (:import-from #:named-readtables
                 #:in-readtable)
   (:import-from #:mstrings
                 #:mstring-syntax))
-(in-package #:hsx-test/element)
+(in-package #:almighty-html-test/element)
 
 (in-readtable mstring-syntax)
 

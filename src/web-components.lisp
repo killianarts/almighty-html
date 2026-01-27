@@ -1,3 +1,3 @@
-(uiop:define-package #:hsx/web-components
+(uiop:define-package #:almighty-html/web-components
   (:use #:cl))
-(in-package #:hsx/web-components)
+(in-package #:almighty-html/web-components)

@@ -1,0 +1,300 @@
+* =ALMIGHTY-HTML= -- HTML S-expressions
+:PROPERTIES:
+:CUSTOM_ID: almighty-html-html-s-expression
+:END:
+
+=ALMIGHTY-HTML= is a declarative, component-oriented HTML DSL for Common
+Lisp. It lets you describe HTML structures and reusable components
+directly in Lisp, safely render them to HTML strings, and seamlessly
+integrate with your web applications.
+
+=ALMIGHTY-HTML= is a fork of the =hsx= library. It no longer uses
+=package-inferred-system=, making it compatible with the =vend= dependencie
+managing library. It also adds full support for SVG and MathML tags.
+
+→ [[https://github.com/skyizwhite/website][Example Project]]
+
+--------------
+
+** How It Works
+:PROPERTIES:
+:CUSTOM_ID: how-it-works
+:END:
+=ALMIGHTY-HTML= translates Lisp S-expressions into HTML by expanding them
+into calls to =create-element=.
+
+Each tag or component inside an =(almighty-html ...)= form becomes:
+
+#+begin_src lisp
+(create-element type props children)
+#+end_src
+
+For example:
+
+#+begin_src lisp
+(almighty-html
+  (article :class "container"
+    (h1 "Title")
+    (p "Paragraph")
+    (~share-button :service :x)))
+#+end_src
+
+Expands into:
+
+#+begin_src lisp
+(create-element :article
+                (list :class "container")
+                (list (create-element :h1 nil (list "Title"))
+                      (create-element :p nil (list "Paragraph"))
+                      (create-element #'~share-button
+                                      (list :service :x)
+                                      nil)))
+#+end_src
+
+--------------
+
+** Quick Example
+:PROPERTIES:
+:CUSTOM_ID: quick-example
+:END:
+#+begin_src lisp
+(almighty-html
+  (div :id "main" :class "container"
+    (h1 "Hello, =ALMIGHTY-HTML=!")
+    (p "This is a simple paragraph.")))
+#+end_src
+
+↓
+
+#+begin_src html
+<div id="main" class="container">
+  <h1>Hello, =ALMIGHTY-HTML=!</h1>
+  <p>This is a simple paragraph.</p>
+</div>
+#+end_src
+
+--------------
+
+** Basic Usage
+:PROPERTIES:
+:CUSTOM_ID: basic-usage
+:END:
+*** Step 1: Create a Component
+:PROPERTIES:
+:CUSTOM_ID: step-1-create-a-component
+:END:
+Components are defined using =define-component=. They are simple Lisp functions
+that return =ALMIGHTY-HTML= elements.
+
+Component names must start with =~= and props should be declared with
+=&key= and/or =&rest=. The special =children= key automatically receives
+any nested elements.
+
+#+begin_src lisp
+(define-component ~button (&key href class children)
+  (almighty-html
+    (a :href href :class (clsx "btn" class)
+      children)))
+#+end_src
+
+*** Step 2: Combine Components
+:PROPERTIES:
+:CUSTOM_ID: step-2-combine-components
+:END:
+=ALMIGHTY-HTML= allows composition of components just like JSX.
+
+#+begin_src lisp
+(define-component ~card (&key title children)
+  (almighty-html
+    (div :class "card"
+      (h2 title)
+      (div :class "content"
+        children))))
+
+(defparameter *view*
+  (almighty-html
+    (div :class "container"
+      (~card :title "Hello"
+        (~button :href "/start" :class "primary"
+          "Get Started"))
+      (~card :title "Docs"
+        (p "Read the documentation to learn more.")))))
+#+end_src
+
+*** Step 3: Render to HTML
+:PROPERTIES:
+:CUSTOM_ID: step-3-render-to-html
+:END:
+Use =render-to-string= to produce a full HTML string. Pass =:pretty t=
+for indented, human-readable output.
+
+#+begin_src lisp
+(render-to-string *view* :pretty t)
+#+end_src
+
+Output:
+
+#+begin_src html
+<div class="container">
+  <div class="card">
+    <h2>Hello</h2>
+    <div class="content">
+      <a href="/start" class="btn primary">Get Started</a>
+    </div>
+  </div>
+  <div class="card">
+    <h2>Docs</h2>
+    <div class="content">
+      <p>Read the documentation to learn more.</p>
+    </div>
+  </div>
+</div>
+#+end_src
+
+--------------
+
+** Fragments
+:PROPERTIES:
+:CUSTOM_ID: fragments
+:END:
+*** =<>= --- Fragment
+:PROPERTIES:
+:CUSTOM_ID: fragment
+:END:
+Combine multiple elements without creating an extra parent tag.
+
+#+begin_src lisp
+(almighty-html
+  (<>
+    (li "One")
+    (li "Two")))
+#+end_src
+
+↓
+
+#+begin_src html
+<li>One</li>
+<li>Two</li>
+#+end_src
+
+Fragments are useful when returning multiple sibling elements from a
+component.
+
+*** =raw!= --- Raw Fragment
+:PROPERTIES:
+:CUSTOM_ID: raw-raw-fragment
+:END:
+=ALMIGHTY-HTML= automatically escapes unsafe characters in text and
+attribute values to prevent injection attacks. If you need to insert
+raw, unescaped HTML, you can do so --- but use it only with trusted
+content, as it disables automatic escaping and may expose security
+risks.
+
+#+begin_src lisp
+(almighty-html
+  (script (raw! "alert('unsafe if user-generated!')")))
+#+end_src
+
+--------------
+
+** Expressions and Logic
+:PROPERTIES:
+:CUSTOM_ID: expressions-and-logic
+:END:
+You can embed any Lisp expression directly inside an =ALMIGHTY-HTML= form.
+Since =ALMIGHTY-HTML= is just Lisp syntax, you can use if, when, loop, or
+any other macro to build dynamic content.
+
+*** Conditional Rendering
+:PROPERTIES:
+:CUSTOM_ID: conditional-rendering
+:END:
+#+begin_src lisp
+(almighty-html
+  (div
+    (if (> (random 10) 5)
+        (almighty-html (p "High!"))
+        (almighty-html (p "Low!")))))
+#+end_src
+
+*** Loop Rendering
+:PROPERTIES:
+:CUSTOM_ID: loop-rendering
+:END:
+#+begin_src lisp
+(almighty-html
+  (ul
+    (loop :for item :in items :collect
+      (almighty-html (li item)))))
+#+end_src
+
+*** Dynamic Props
+:PROPERTIES:
+:CUSTOM_ID: dynamic-props
+:END:
+=ALMIGHTY-HTML= supports both inline plist props and dynamic plist props.
+
+#+begin_src lisp
+(let ((props '(:class "btn" :href "/")))
+  (almighty-html (a props "Dynamic Link")))
+#+end_src
+
+--------------
+
+** Utilities
+:PROPERTIES:
+:CUSTOM_ID: utilities
+:END:
+*** =register-web-components=
+:PROPERTIES:
+:CUSTOM_ID: register-web-components
+:END:
+Makes Web Components usable in =ALMIGHTY-HTML=.
+
+#+begin_src lisp
+(register-web-components
+ custom1 custom2)
+
+(almighty-html
+  (custom1 :prop "val"
+    (custom2)))
+#+end_src
+
+↓
+
+#+begin_src html
+<custom1 prop="val">
+  <custom2></custom2>
+</custom1>
+#+end_src
+
+*** =clear-web-components=
+:PROPERTIES:
+:CUSTOM_ID: clear-web-components
+:END:
+Clears all registered Web Components.
+
+*** =clsx=
+:PROPERTIES:
+:CUSTOM_ID: clsx
+:END:
+Builds class strings conditionally. Removes =nil= and joins the
+remaining strings with spaces.
+
+#+begin_src lisp
+(clsx "btn" nil "primary")
+;; => "btn primary"
+#+end_src
+
+--------------
+
+** License
+:PROPERTIES:
+:CUSTOM_ID: license
+:END:
+MIT License
+
+© 2024 Akira Tempaku
+
+© 2018 Bo Yao (original [[https://github.com/ailisp/flute][flute]]
+project)
