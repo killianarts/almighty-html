@@ -5,19 +5,19 @@
                 #:symbolicate)
   (:import-from #:almighty-html/element
                 #:create-element)
-  (:export #:almighty-html
+  (:export #:</>
            #:deftag
            #:register-web-components
            #:clear-web-components
            #:define-component))
 (in-package #:almighty-html/dsl)
 
-;;; almighty-html macro
+;;; </> macro
 
-(defmacro almighty-html (form)
+(defmacro </> (form)
   "Automatically detect html tags, registered Web Components, and user-defined ALMIGHTY-HTML components.
 All other expressions are evaluated as regular Lisp forms.
-To create ALMIGHTY-HTML elements within a Lisp form, use the `almighty-html` macro again."
+To create ALMIGHTY-HTML elements within a Lisp form, use the `</>` macro again."
   (detect-elements form))
 
 (defun external-symbol (sym package)
@@ -45,9 +45,9 @@ To create ALMIGHTY-HTML elements within a Lisp form, use the `almighty-html` mac
                   (cons detected-head (mapcar #'detect-elements tail)))))
       form))
 
-;;; defalmighty-html macro
+;;; def</> macro
 
-(defmacro defalmighty-html (name element-type)
+(defmacro def</> (name element-type)
                                         ; Use a macro instead of a function to allow semantic indentation, similar to HTML.
   `(defmacro ,name (&body body)
      `(%create-element ,',element-type ,@body)))
@@ -82,7 +82,7 @@ To create ALMIGHTY-HTML elements within a Lisp form, use the `almighty-html` mac
 
 (defmacro deftag (name)
   `(eval-when (:compile-toplevel :load-toplevel :execute)
-     (defalmighty-html ,name ,(make-keyword name))))
+     (def</> ,name ,(make-keyword name))))
 
 (defmacro register-web-components (&rest names)
   (let ((pkg (find-package :almighty-html/web-components)))
@@ -113,4 +113,4 @@ To create ALMIGHTY-HTML elements within a Lisp form, use the `almighty-html` mac
   (let ((%name (symbolicate '% name)))
     `(eval-when (:compile-toplevel :load-toplevel :execute)
        (defun ,%name ,props ,@body)
-       (defalmighty-html ,name (fdefinition ',%name)))))
+       (def</> ,name (fdefinition ',%name)))))

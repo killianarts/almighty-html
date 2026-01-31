@@ -145,7 +145,7 @@
           (element-children element)))
 
 (defmethod render-children ((element style-tag))
-  (mapcar #'minify-css (call-next-method)))
+  (call-next-method))
 
 (defmethod render-children ((element raw-fragment))
   (element-children element))
