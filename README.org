@@ -9,7 +9,7 @@ directly in Lisp, safely render them to HTML strings, and seamlessly
 integrate with your web applications.
 
 =ALMIGHTY-HTML= is a fork of the =hsx= library. It no longer uses
-=package-inferred-system=, making it compatible with the =vend= dependencie
+=package-inferred-system=, making it compatible with the =vend= dependency
 managing library. It also adds full support for SVG tags.
 
 → [[https://github.com/skyizwhite/website][Example Project]]
