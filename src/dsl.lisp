@@ -48,7 +48,7 @@ To create ALMIGHTY-HTML elements within a Lisp form, use the `</>` macro again."
 ;;; def</> macro
 
 (defmacro def</> (name element-type)
-                                        ; Use a macro instead of a function to allow semantic indentation, similar to HTML.
+  ;; Use a macro instead of a function to allow semantic indentation, similar to HTML.
   `(defmacro ,name (&body body)
      `(%create-element ,',element-type ,@body)))
 
@@ -59,10 +59,10 @@ To create ALMIGHTY-HTML elements within a Lisp form, use the `</>` macro again."
 
 (defun parse-body (body)
   (cond
-                                        ; body has props as a normal plist
+    ;; body has props as a normal plist
     ((plist-p (first body))
      (values (first body) (rest body)))
-                                        ; body has props as an inline plist
+    ;; body has props as an inline plist
     ((keywordp (first body))
      (loop :for thing :on body :by #'cddr
            :for (k v) := thing
@@ -71,7 +71,7 @@ To create ALMIGHTY-HTML elements within a Lisp form, use the `</>` macro again."
            :when (not (keywordp k))
              :return (values props thing)
            :finally (return (values props nil))))
-                                        ; body has no props
+    ;; body has no props
     (t (values nil body))))
 
 (defun plist-p (obj)

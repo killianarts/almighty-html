@@ -29,7 +29,7 @@
  text tspan textpath
 
  ;; Containers / other graphics
- image foreignobject switch view a
+ image foreignobject switch view
 
  ;; Clipping, masking, markers
  clippath mask marker
@@ -48,7 +48,7 @@
  animate animatemotion animatetransform |set| discard mpath
 
  ;; Miscellaneous
- script style cursor
+ cursor
 
                                         ; special tags
  <> raw!)

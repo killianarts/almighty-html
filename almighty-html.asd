@@ -7,10 +7,11 @@
   :in-order-to ((test-op (test-op almighty-html-test)))
   :pathname "src"
   :serial t
-  :depends-on ("alexandria" "str" "cl-minify-css")
+  :depends-on ("alexandria" "str" "cl-minify-css" "parcom" "parcom/xml")
   :components ((:file "utils")
                (:file "element")
                (:file "dsl")
                (:file "builtin")
                (:file "web-components")
+               (:file "parser")
                (:file "main")))
