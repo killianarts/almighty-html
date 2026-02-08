@@ -23,7 +23,7 @@ managing library. It also adds full support for SVG tags.
 =ALMIGHTY-HTML= translates Lisp S-expressions into HTML by expanding them
 into calls to =create-element=.
 
-Each tag or component inside an =(almighty-html ...)= form becomes:
+Each tag or component inside an =(</> ...)= form becomes:
 
 #+begin_src lisp
 (create-element type props children)
@@ -32,11 +32,11 @@ Each tag or component inside an =(almighty-html ...)= form becomes:
 For example:
 
 #+begin_src lisp
-(almighty-html
+(</>
   (article :class "container"
     (h1 "Title")
     (p "Paragraph")
-    (~share-button :service :x)))
+    (ac-share-button :service :x)))
 #+end_src
 
 Expands into:
@@ -46,7 +46,7 @@ Expands into:
                 (list :class "container")
                 (list (create-element :h1 nil (list "Title"))
                       (create-element :p nil (list "Paragraph"))
-                      (create-element #'~share-button
+                      (create-element #'ac-share-button
                                       (list :service :x)
                                       nil)))
 #+end_src
@@ -58,7 +58,7 @@ Expands into:
 :CUSTOM_ID: quick-example
 :END:
 #+begin_src lisp
-(almighty-html
+(</>
   (div :id "main" :class "container"
     (h1 "Hello, =ALMIGHTY-HTML=!")
     (p "This is a simple paragraph.")))
@@ -86,13 +86,13 @@ Expands into:
 Components are defined using =define-component=. They are simple Lisp functions
 that return =ALMIGHTY-HTML= elements.
 
-Component names must start with =~= and props should be declared with
+Component names must start with =ac-= and props should be declared with
 =&key= and/or =&rest=. The special =children= key automatically receives
 any nested elements.
 
 #+begin_src lisp
-(define-component ~button (&key href class children)
-  (almighty-html
+(define-component ac-button (&key href class children)
+  (</>
     (a :href href :class (clsx "btn" class)
       children)))
 #+end_src
@@ -104,20 +104,20 @@ any nested elements.
 =ALMIGHTY-HTML= allows composition of components just like JSX.
 
 #+begin_src lisp
-(define-component ~card (&key title children)
-  (almighty-html
+(define-component ac-card (&key title children)
+  (</>
     (div :class "card"
       (h2 title)
       (div :class "content"
         children))))
 
 (defparameter *view*
-  (almighty-html
+  (</>
     (div :class "container"
-      (~card :title "Hello"
-        (~button :href "/start" :class "primary"
+      (ac-card :title "Hello"
+        (ac-button :href "/start" :class "primary"
           "Get Started"))
-      (~card :title "Docs"
+      (ac-card :title "Docs"
         (p "Read the documentation to learn more.")))))
 #+end_src
 
@@ -164,7 +164,7 @@ Output:
 Combine multiple elements without creating an extra parent tag.
 
 #+begin_src lisp
-(almighty-html
+(</>
   (<>
     (li "One")
     (li "Two")))
@@ -191,7 +191,7 @@ content, as it disables automatic escaping and may expose security
 risks.
 
 #+begin_src lisp
-(almighty-html
+(</>
   (script (raw! "alert('unsafe if user-generated!')")))
 #+end_src
 
@@ -210,11 +210,11 @@ any other macro to build dynamic content.
 :CUSTOM_ID: conditional-rendering
 :END:
 #+begin_src lisp
-(almighty-html
+(</>
   (div
     (if (> (random 10) 5)
-        (almighty-html (p "High!"))
-        (almighty-html (p "Low!")))))
+        (</> (p "High!"))
+        (</> (p "Low!")))))
 #+end_src
 
 *** Loop Rendering
@@ -222,10 +222,10 @@ any other macro to build dynamic content.
 :CUSTOM_ID: loop-rendering
 :END:
 #+begin_src lisp
-(almighty-html
+(</>
   (ul
     (loop :for item :in items :collect
-      (almighty-html (li item)))))
+      (</> (li item)))))
 #+end_src
 
 *** Dynamic Props
@@ -236,7 +236,7 @@ any other macro to build dynamic content.
 
 #+begin_src lisp
 (let ((props '(:class "btn" :href "/")))
-  (almighty-html (a props "Dynamic Link")))
+  (</> (a props "Dynamic Link")))
 #+end_src
 
 --------------
@@ -255,7 +255,7 @@ Makes Web Components usable in =ALMIGHTY-HTML=.
 (register-web-components
  custom1 custom2)
 
-(almighty-html
+(</>
   (custom1 :prop "val"
     (custom2)))
 #+end_src
@@ -294,7 +294,9 @@ remaining strings with spaces.
 :END:
 MIT License
 
-© 2024 Akira Tempaku
+© 2026 Micah Killian
 
 © 2018 Bo Yao (original [[https://github.com/ailisp/flute][flute]]
 project)
+
+© 2024 Akira Tempaku (HSX)
