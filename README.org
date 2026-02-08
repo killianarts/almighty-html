@@ -10,7 +10,7 @@ integrate with your web applications.
 
 =ALMIGHTY-HTML= is a fork of the =hsx= library. It no longer uses
 =package-inferred-system=, making it compatible with the =vend= dependencie
-managing library. It also adds full support for SVG and MathML tags.
+managing library. It also adds full support for SVG tags.
 
 → [[https://github.com/skyizwhite/website][Example Project]]
 
