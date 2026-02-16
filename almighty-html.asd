@@ -1,5 +1,5 @@
 (defsystem "almighty-html"
-  :version "1.3.0"
+  :version "1.4.0"
   :description "Component-oriented HTML DSL"
   :author "Micah Killian, Akira Tempaku, Bo Yao"
   :maintainer "Micah Killian <micah@almightylisp.com>"
