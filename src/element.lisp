@@ -59,6 +59,8 @@
 
 (defclass component (element) ())
 
+;; TODO Add comments
+
 ;;;; factory
 
 (defun create-element (type props children)

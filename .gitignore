@@ -2,3 +2,5 @@
 .qlot/
 *.fasl
 vendored/*
+
+research
