@@ -22,7 +22,8 @@
            #:element-props
            #:element-children
            #:expand-component
-           #:render-to-string))
+           #:render-to-string
+           #:render-almight-object))
 (in-package #:almighty-html/element)
 
 ;;; tag group definitions
@@ -143,8 +144,13 @@
   (mapcar (lambda (child)
             (if (stringp child)
                 (escape-html-text-content child)
+                ;; If the child isn't a string, just return it.
                 child))
           (element-children element)))
+
+(defgeneric render-almighty-object (standard-object)
+  (:documentation "Render an object defined via defclass."))
+
 
 (defmethod render-children ((element style-tag))
   (call-next-method))

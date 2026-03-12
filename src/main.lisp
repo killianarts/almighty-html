@@ -13,5 +13,6 @@
            #:clear-web-components
            #:render-to-string
            #:clsx
-           #:convert-html-to-almighty))
+           #:convert-html-to-almighty
+           #:render-almighty-object))
 (in-package :almighty-html)

@@ -60,11 +60,11 @@ If INDENT is non-NIL, pretty-print with that many spaces per level."
           (when indent (write-char #\Newline stream))
           ;; Children — raw text elements get unescaped output
           (if (member tag dom:*raw-text-elements* :test #'string-equal)
-              (loop for child across (dom:node-children node)
-                    do (when (typep child 'dom:text-node)
-                         (write-string (dom:text-data child) stream)))
-              (loop for child across (dom:node-children node)
-                    do (serialize-to-stream child stream indent (1+ level))))
+              (loop :for child :across (dom:node-children node)
+                    :do (when (typep child 'dom:text-node)
+                          (write-string (dom:text-data child) stream)))
+              (loop :for child :across (dom:node-children node)
+                    :do (serialize-to-stream child stream indent (1+ level))))
           ;; Closing tag
           (when indent (write-indent stream indent level))
           (format stream "</~a>" tag)
@@ -113,7 +113,8 @@ INDENT controls indentation (default 2 spaces per level, NIL for compact output)
     (dom:text-node
      (let ((data (dom:text-data node)))
        (if indent
-           (let ((trimmed (string-trim '(#\Space #\Tab #\Newline) data)))
+           ;; Removed Space -- we want to keep spaces because we need space between <i>/<b> elements within <p> elements.
+           (let ((trimmed (string-trim '(#\Tab #\Newline) data)))
              (when (> (length trimmed) 0)
                (write-indent stream indent level)
                (write-char #\" stream)
@@ -127,13 +128,14 @@ INDENT controls indentation (default 2 spaces per level, NIL for compact output)
     (dom:comment-node nil)
 
     (dom:element-node
+     (write-char #\Newline stream)
      (let ((tag (dom:element-tag-name node)))
        (when indent (write-indent stream indent level))
        (write-char #\( stream)
        (write-string tag stream)
        ;; Attributes
-       (loop for (name . value) in (dom:element-attributes node)
-             do (format stream " :~a \"~a\"" name (escape-lisp-string value)))
+       (loop :for (name . value) :in (dom:element-attributes node)
+             :do (format stream " :~a \"~a\"" name (escape-lisp-string value)))
        ;; Self-closing or void
        (cond
          ((member tag dom:*void-elements* :test #'string-equal)
@@ -146,14 +148,19 @@ INDENT controls indentation (default 2 spaces per level, NIL for compact output)
               ((and indent (null visible))
                (write-char #\) stream))
               ((null indent)
-               (loop for child across (dom:node-children node)
-                     do (serialize-to-lisp child stream nil level))
+               (loop :for child :across (dom:node-children node)
+                     :do (serialize-to-lisp child stream nil level))
                (write-char #\) stream))
               (t
-               (write-char #\Newline stream)
-               (loop for (child . rest) on visible
-                     do (serialize-to-lisp child stream indent (1+ level))
-                        (when rest (write-char #\Newline stream)))
+               ;; This is causing the newline before text nodes
+               ;; (write-char #\Newline stream)
+               ;; (loop :for (child . rest) :on visible
+               ;;       :do (serialize-to-lisp child stream indent (1+ level))
+               ;;           (when rest (write-char #\Newline stream)))
+               (loop :for (child . rest) :on visible
+                     :do (serialize-to-lisp child stream 1 1)
+                         ;; (when rest (write-char #\Newline stream))
+                     )
                (write-char #\) stream))))))))))
 
 (defun write-lispified-node (node-or-string path &key (indent 2) (if-exists :supersede))
@@ -172,7 +179,7 @@ IF-EXISTS is passed to OPEN (default :supersede)."
   path)
 
 (defun write-indent (stream indent level)
-  (loop repeat (* indent level) do (write-char #\Space stream)))
+  (loop :repeat (* indent level) :do (write-char #\Space stream)))
 
 (defun escape-html-text (text)
   "Escape text for safe inclusion in HTML content."
