@@ -158,9 +158,7 @@ INDENT controls indentation (default 2 spaces per level, NIL for compact output)
                ;;       :do (serialize-to-lisp child stream indent (1+ level))
                ;;           (when rest (write-char #\Newline stream)))
                (loop :for (child . rest) :on visible
-                     :do (serialize-to-lisp child stream 1 1)
-                         ;; (when rest (write-char #\Newline stream))
-                     )
+                     :do (serialize-to-lisp child stream 1 1))
                (write-char #\) stream))))))))))
 
 (defun write-lispified-node (node-or-string path &key (indent 2) (if-exists :supersede))
