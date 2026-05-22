@@ -8,7 +8,7 @@
 
 (defun test-html-dir ()
   "Return the path to the t/html/ directory."
-  (asdf:system-relative-pathname :almighty-html/parser/tests "tests/html/"))
+  (asdf:system-relative-pathname :almighty-html "tests/html/"))
 
 (defun read-html-file (filename)
   "Read an HTML file from the t/html/ directory and return its contents as a string."

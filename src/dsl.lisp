@@ -29,7 +29,8 @@ To create ALMIGHTY-HTML elements within a Lisp form, use the `</>` macro again."
   (string-equal  "ac-" (subseq (string sym) 0 3)))
 
 (defun detect-component (sym)
-  (and (starts-with-acdash-p sym) sym))
+  (when (> (length (string sym)) 2)
+    (and (starts-with-acdash-p sym) sym)))
 
 (defun detect-elements (form)
   (or (and (consp form)

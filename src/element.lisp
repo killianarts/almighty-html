@@ -4,8 +4,6 @@
                 #:flatten)
   (:import-from #:str
                 #:collapse-whitespaces)
-  (:import-from #:cl-minify-css
-                #:minify-css)
   (:import-from #:almighty-html/utils
                 #:escape-html-text-content
                 #:escape-html-attribute)
